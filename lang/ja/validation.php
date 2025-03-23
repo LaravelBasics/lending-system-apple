@@ -37,6 +37,8 @@ return [
     'date_equals'    => ':attributeは:dateに等しい日付でなければなりません。',
     // 'date_format'    => ":attributeの形式は、':format'と合いません。",
     'date_format'    => "2025-01-01の形式にしてください。",
+    'valid_date'     => ':attribute は無効な日付形式です。年、月、日が正しくない可能性があります。',
+    'valid_date'     => ':attribute は無効な日付です。',
     'different'      => ':attributeと:otherには、異なるものを指定してください。',
     'digits'         => ':attributeは、:digits桁にしてください。',
     'max_digits'     => ':attributeは最大:max文字以下で入力してください。',
