@@ -383,7 +383,7 @@
                 <tr>
                     <th class="custom-input">
                         <input type="text" name="name_search" v-model="queryName" @input="fetchSuggestions(queryName, 'name')" autocomplete="off" placeholder="名前を入力してください">
-                        <p v-if="loadingName" style="color: #dc3545; padding-left: 1rem">読み込み中...</p>
+                        <div v-if="loadingName" class="suggestions-list" style="color: #dc3545; padding-left: 1rem">名前「@{{ queryName }}」の候補を検索中...</div>
                         <!-- サジェスト候補リスト -->
                         <div v-if="nameSuggestions.length" class="suggestions-list">
                             <ul>
@@ -392,11 +392,12 @@
                                 </li>
                             </ul>
                         </div>
+                        
                         <!-- <p v-if="!loading" style="color: #dc3545; padding-left: 1rem">予測変換結果がありません</p> -->
                     </th>
                     <th class="custom-input">
                         <input type="text" name="item_name_search" v-model="queryItem" @input="fetchSuggestions(queryItem, 'item_name')" autocomplete="off" placeholder="品名を入力してください">
-                        <p v-if="loadingItem" style="color: #dc3545; padding-left: 1rem">読み込み中...</p>
+                        <div v-if="loadingItem" class="suggestions-list" style="color: #dc3545; padding-left: 1rem">品名「@{{ queryItem }}」の候補を検索中...</div>
                         <div v-if="itemSuggestions.length" class="suggestions-list">
                             <ul>
                                 <li v-for="suggestion in itemSuggestions" :key="suggestion.id" @click="selectSuggestion(suggestion, 'queryItem')">
@@ -715,6 +716,7 @@
                     this.queryItem = suggestion.item_name; // 'queryItem' に 'item_name' を設定
                     this.itemSuggestions = [];
                 }
+                this.hidden = false;
                 // target = [];
             },
             updateMobileStatus() { // 768px判定
