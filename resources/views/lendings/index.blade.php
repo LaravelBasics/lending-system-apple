@@ -39,7 +39,7 @@
 
     /* 表の基本スタイル */
     .simple-table {
-        width: 100%;
+        width: 95%;
         /* 表の幅を100%に設定 */
         font-size: 1rem;
         /* テキストの基本フォントサイズ */
@@ -49,7 +49,7 @@
         /* 表の背景色（薄いグレー） */
         border-collapse: collapse;
         /* 格子線が重ならないように設定 */
-        transform: scale(0.95);
+        /* transform: scale(0.95); */
         /* テーブルを80%のサイズに縮小 */
     }
 
@@ -58,8 +58,6 @@
     .simple-table td {
         white-space: nowrap;
         /* テキストの折り返しを防ぐ */
-        overflow: hidden;
-        /* はみ出した部分を隠す */
         text-overflow: ellipsis;
         /* 省略記号を表示 */
         max-width: 16rem;
@@ -141,6 +139,7 @@
     }
 
     .custom-input {
+        position: relative; /* これにより、サジェストリストの絶対位置の基準をこの要素にする */
         text-align: center;
         /* <th>内のコンテンツを中央揃えに */
     }
@@ -213,7 +212,6 @@
     .elementleft,
     .elementright {
         font-size: 1rem;
-        transform: scale(0.95);
     }
 
     .elementleft {
@@ -248,13 +246,13 @@
         /* 入力フォームとリストの間のボーダーを非表示 */
         box-shadow: 0 0.25rem 0.375rem rgba(0, 0, 0, 0.1);
         /* 軽いシャドウを追加 */
-        max-height: 27rem;
+        max-height: 12.5rem;
         /* 初期状態では非表示 */
         overflow-y: auto;
         /* スクロールを表示 */
         transition: max-height 0.3s ease, box-shadow 0.3s ease;
         /* アコーディオンの開閉アニメーション */
-        z-index: 10;
+        /* z-index: 10; */
         /* リストが他の要素の上に表示されるように */
     }
 
@@ -382,7 +380,7 @@
             <table class="simple-table">
                 <tr>
                     <th class="custom-input">
-                        <input type="text" name="name_search" v-model="queryName" @input="fetchSuggestions(queryName, 'name')" autocomplete="off" placeholder="名前を入力してください">
+                        <input type="text" name="name_search" v-model="queryName" @blur="clearSuggestions('nameSuggestions')" @input="fetchSuggestions(queryName, 'name')" autocomplete="off" placeholder="名前を入力してください">
                         <div v-if="loadingName" class="suggestions-list" style="color: #dc3545; padding-left: 1rem">名前「@{{ queryName }}」の候補を検索中...</div>
                         <!-- サジェスト候補リスト -->
                         <div v-if="nameSuggestions.length" class="suggestions-list">
@@ -396,7 +394,7 @@
                         <!-- <p v-if="!loading" style="color: #dc3545; padding-left: 1rem">予測変換結果がありません</p> -->
                     </th>
                     <th class="custom-input">
-                        <input type="text" name="item_name_search" v-model="queryItem" @input="fetchSuggestions(queryItem, 'item_name')" autocomplete="off" placeholder="品名を入力してください">
+                        <input type="text" name="item_name_search" v-model="queryItem" @blur="clearSuggestions('itemSuggestions')" @input="fetchSuggestions(queryItem, 'item_name')" autocomplete="off" placeholder="品名を入力してください">
                         <div v-if="loadingItem" class="suggestions-list" style="color: #dc3545; padding-left: 1rem">品名「@{{ queryItem }}」の候補を検索中...</div>
                         <div v-if="itemSuggestions.length" class="suggestions-list">
                             <ul>
@@ -437,7 +435,7 @@
     <form :action="`{{ route('lendings.update', ':id') }}`.replace(':id', editLendingId)" method="POST">
         @csrf
         @method('PUT')
-        <div v-if="!hidden" class="table-container">
+        <div class="table-container">
             <table class="simple-table">
                 <thead>
                     <tr>
@@ -609,12 +607,10 @@
                 todayEditId: null, // バリデーション時にIdを取得
                 isMobile: window.matchMedia("(max-width: 768px)").matches,
                 queryName: window.oldValues?.name_search || '{{ old('name_search', session('search_condition.name_search')) }}', // `oldValues`から検索の初期値を設定
-                suggestions: [], // サジェスト候補のリスト
                 nameSuggestions: [], // 名前検索用のサジェスト
                 itemSuggestions: [], // 品名検索用のサジェスト
                 loadingName: false,
                 loadingItem: false,
-                hidden: false,
                 queryItem: window.oldValues?.item_name_search || '{{ old('item_name_search', session('search_condition.item_name_search')) }}',
             };
         },
@@ -648,24 +644,19 @@
             queryItem() {
                 this.clearSuggestions("itemSuggestions");
             }
-            // `queryName` の値が変更されたときに実行される
-            // queryName(newQuery) {
-            //     // if (String(newQuery).trim() === "") { // 入力が空（またはスペースのみ）の場合
-            //         this.suggestions = []; // サジェストをクリアする
-            //     // }
-            // },
         },
         methods: {
             clearSuggestions(target) {
                 if (target === "nameSuggestions") {
                     this.nameSuggestions = [];
+                    this.showNameSuggestions = false; // カーソルが外れたらサジェストをクリア
                 } else {
                     this.itemSuggestions = [];  // itemSuggestions にセット
+                    this.showItemSuggestions = false; // カーソルが外れたらサジェストをクリア
                 }
             },
             // Lodash の debounce を使用して、入力の頻度を減らす
             debouncedFetchSuggestions: _.debounce(async function(queryKey, target) {
-                this.hidden = true;
                 // ローディングの状態を変更
                 if (target === "name") {
                     this.itemSuggestions = [];  // itemSuggestions にセット
@@ -696,13 +687,9 @@
                     this.itemSuggestions = response.data;  // itemSuggestions にセット
                     this.loadingItem = false; // ローディング終了
                 }
-                // console.log(queryKey); // 追加して確認
-                // console.log(target); // 追加して確認
-
             }, 300), // 300ms の遅延後に実行
             // ユーザーの入力が変わったらデバウンスされた関数を呼び出す
             fetchSuggestions(queryKey, target) {
-                // console.log("fetchSuggestions called with:", queryKey, target); // ここで値を確認
                 this.debouncedFetchSuggestions(queryKey, target);
             },
             selectSuggestion(suggestion, target) {
@@ -716,7 +703,6 @@
                     this.queryItem = suggestion.item_name; // 'queryItem' に 'item_name' を設定
                     this.itemSuggestions = [];
                 }
-                this.hidden = false;
                 // target = [];
             },
             updateMobileStatus() { // 768px判定
