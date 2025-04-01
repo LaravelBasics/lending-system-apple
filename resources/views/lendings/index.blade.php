@@ -51,7 +51,6 @@
         /* 格子線が重ならないように設定 */
         transform: scale(0.95);
         /* テーブルを80%のサイズに縮小 */
-
     }
 
     /* 表のセルスタイル */
@@ -233,6 +232,60 @@
         font-size: 2rem;
         text-align: center;
     }
+
+    /* サジェストリストの位置と表示 */
+    .suggestions-list {
+        position: absolute;
+        top: 100%;
+        /* 入力フォームの真下に表示 */
+        left: 0;
+        width: 100%;
+        /* テキストボックスと同じ幅 */
+        background-color: #fff;
+        border: 0.0625rem solid #ced4da;
+        /* ボーダー色 */
+        border-top: none;
+        /* 入力フォームとリストの間のボーダーを非表示 */
+        box-shadow: 0 0.25rem 0.375rem rgba(0, 0, 0, 0.1);
+        /* 軽いシャドウを追加 */
+        max-height: 27rem;
+        /* 初期状態では非表示 */
+        overflow-y: auto;
+        /* スクロールを表示 */
+        transition: max-height 0.3s ease, box-shadow 0.3s ease;
+        /* アコーディオンの開閉アニメーション */
+        z-index: 10;
+        /* リストが他の要素の上に表示されるように */
+    }
+
+    /* サジェストリストが表示されたときのスタイル */
+    .suggestions-list.show {
+        max-height: 12.5rem;
+        /* 最大の表示高さ (200px = 12.5rem) */
+        overflow-y: auto;
+        /* スクロールを表示 */
+    }
+
+    /* サジェストリストのリスト項目 */
+    .suggestions-list ul {
+        padding: 0;
+        margin: 0;
+        list-style-type: none;
+    }
+
+    .suggestions-list li {
+        padding: 0.5rem;
+        /* 8px = 0.5rem */
+        cursor: pointer;
+        font-size: 1rem;
+        /* フォントサイズ 16px = 1rem */
+        color: #333;
+    }
+
+    .suggestions-list li:hover {
+        background-color: #f1f1f1;
+        /* ホバー時に背景色を変更 */
+    }
 </style>
 @endsection
 
@@ -329,14 +382,28 @@
             <table class="simple-table">
                 <tr>
                     <th class="custom-input">
-                        <input type="text" name="name_search"
-                            value="{{ old('name_search', session('search_condition.name_search')) }}"
-                            autocomplete="name" placeholder="名前を入力してください">
+                        <input type="text" name="name_search" v-model="queryName" @input="fetchSuggestions(queryName, 'name')" autocomplete="off" placeholder="名前を入力してください">
+                        <p v-if="loadingName" style="color: #dc3545; padding-left: 1rem">読み込み中...</p>
+                        <!-- サジェスト候補リスト -->
+                        <div v-if="nameSuggestions.length" class="suggestions-list">
+                            <ul>
+                                <li v-for="suggestion in nameSuggestions" :key="suggestion.id" @click="selectSuggestion(suggestion, 'queryName')">
+                                    @{{ suggestion.name }}
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- <p v-if="!loading" style="color: #dc3545; padding-left: 1rem">予測変換結果がありません</p> -->
                     </th>
                     <th class="custom-input">
-                        <input type="text" name="item_name_search"
-                            value="{{ old('item_name_search', session('search_condition.item_name_search')) }}"
-                            autocomplete="on" placeholder="品名を入力してください">
+                        <input type="text" name="item_name_search" v-model="queryItem" @input="fetchSuggestions(queryItem, 'item_name')" autocomplete="off" placeholder="品名を入力してください">
+                        <p v-if="loadingItem" style="color: #dc3545; padding-left: 1rem">読み込み中...</p>
+                        <div v-if="itemSuggestions.length" class="suggestions-list">
+                            <ul>
+                                <li v-for="suggestion in itemSuggestions" :key="suggestion.id" @click="selectSuggestion(suggestion, 'queryItem')">
+                                    @{{ suggestion.item_name }}
+                                </li>
+                            </ul>
+                        </div>
                     </th>
                     <th class="custom-input">
                         <input type="text" name="lend_date_search"
@@ -369,7 +436,7 @@
     <form :action="`{{ route('lendings.update', ':id') }}`.replace(':id', editLendingId)" method="POST">
         @csrf
         @method('PUT')
-        <div class="table-container">
+        <div v-if="!hidden" class="table-container">
             <table class="simple-table">
                 <thead>
                     <tr>
@@ -540,6 +607,14 @@
                 today: null, // 今日の日付を取得
                 todayEditId: null, // バリデーション時にIdを取得
                 isMobile: window.matchMedia("(max-width: 768px)").matches,
+                queryName: window.oldValues?.name_search || '{{ old('name_search', session('search_condition.name_search')) }}', // `oldValues`から検索の初期値を設定
+                suggestions: [], // サジェスト候補のリスト
+                nameSuggestions: [], // 名前検索用のサジェスト
+                itemSuggestions: [], // 品名検索用のサジェスト
+                loadingName: false,
+                loadingItem: false,
+                hidden: false,
+                queryItem: window.oldValues?.item_name_search || '{{ old('item_name_search', session('search_condition.item_name_search')) }}',
             };
         },
         mounted() {
@@ -564,7 +639,84 @@
         beforeUnmount() { // 768px判定
             window.removeEventListener("resize", this.updateMobileStatus);
         },
+        watch: {
+            // すべての query 系のプロパティを監視し、値が変更されたら `clearSuggestions` を実行
+            queryName() {
+                this.clearSuggestions("nameSuggestions");
+            },
+            queryItem() {
+                this.clearSuggestions("itemSuggestions");
+            }
+            // `queryName` の値が変更されたときに実行される
+            // queryName(newQuery) {
+            //     // if (String(newQuery).trim() === "") { // 入力が空（またはスペースのみ）の場合
+            //         this.suggestions = []; // サジェストをクリアする
+            //     // }
+            // },
+        },
         methods: {
+            clearSuggestions(target) {
+                if (target === "nameSuggestions") {
+                    this.nameSuggestions = [];
+                } else {
+                    this.itemSuggestions = [];  // itemSuggestions にセット
+                }
+            },
+            // Lodash の debounce を使用して、入力の頻度を減らす
+            debouncedFetchSuggestions: _.debounce(async function(queryKey, target) {
+                this.hidden = true;
+                // ローディングの状態を変更
+                if (target === "name") {
+                    this.itemSuggestions = [];  // itemSuggestions にセット
+                    this.loadingName = true;
+                } else {
+                    this.nameSuggestions = [];
+                    this.loadingItem = true;
+                }
+                if (!queryKey) { // 検索文字列が2文字未満の場合
+                    // target = []; // サジェストをクリア
+                    if (target === "name") {
+                        this.nameSuggestions = [];
+                        this.loadingName = false;
+                    } else {
+                        this.itemSuggestions = [];  // itemSuggestions にセット
+                        this.loadingItem = false;
+                    }
+                    return; // APIリクエストを実行しない
+                }
+
+                // サーバーへリクエストを送信し、検索結果を取得
+                const response = await axios.get(`/search?q=${queryKey}&column=${target}`);
+                // `target` が `nameSuggestions` の場合と `itemSuggestions` の場合で処理を分ける
+                if (target === "name") {
+                    this.nameSuggestions = response.data;  // nameSuggestions にセット
+                    this.loadingName = false; // ローディング終了
+                } else if (target === "item_name") {
+                    this.itemSuggestions = response.data;  // itemSuggestions にセット
+                    this.loadingItem = false; // ローディング終了
+                }
+                // console.log(queryKey); // 追加して確認
+                // console.log(target); // 追加して確認
+
+            }, 300), // 300ms の遅延後に実行
+            // ユーザーの入力が変わったらデバウンスされた関数を呼び出す
+            fetchSuggestions(queryKey, target) {
+                // console.log("fetchSuggestions called with:", queryKey, target); // ここで値を確認
+                this.debouncedFetchSuggestions(queryKey, target);
+            },
+            selectSuggestion(suggestion, target) {
+                // target の値が 'queryName' の場合
+                if (target === 'queryName') {
+                    this.queryName = suggestion.name; // 'queryName' に 'name' を設定
+                    this.nameSuggestions = [];
+                }
+                // target の値が 'queryItem' の場合
+                else if (target === 'queryItem') {
+                    this.queryItem = suggestion.item_name; // 'queryItem' に 'item_name' を設定
+                    this.itemSuggestions = [];
+                }
+                // target = [];
+            },
             updateMobileStatus() { // 768px判定
                 this.isMobile = window.matchMedia("(max-width: 768px)").matches;
             },
