@@ -257,12 +257,12 @@
     }
 
     /* サジェストリストが表示されたときのスタイル */
-    .suggestions-list.show {
-        max-height: 12.5rem;
+    /* .suggestions-list.show { */
+        /* max-height: 12.5rem; */
         /* 最大の表示高さ (200px = 12.5rem) */
-        overflow-y: auto;
+        /* overflow-y: auto; */
         /* スクロールを表示 */
-    }
+    /* } */
 
     /* サジェストリストのリスト項目 */
     .suggestions-list ul {
@@ -380,12 +380,12 @@
             <table class="simple-table">
                 <tr>
                     <th class="custom-input">
-                        <input type="text" name="name_search" v-model="queryName" @blur="clearSuggestions('nameSuggestions')" @input="fetchSuggestions(queryName, 'name')" autocomplete="off" placeholder="名前を入力してください">
+                        <input type="text" name="name_search" v-model="queryName" @blur="clearSuggestions('queryName')" @input="fetchSuggestions(queryName, 'name')" autocomplete="off" placeholder="名前を入力してください">
                         <div v-if="loadingName" class="suggestions-list" style="color: #dc3545; padding-left: 1rem">名前「@{{ queryName }}」の候補を検索中...</div>
                         <!-- サジェスト候補リスト -->
                         <div v-if="nameSuggestions.length" class="suggestions-list">
                             <ul>
-                                <li v-for="suggestion in nameSuggestions" :key="suggestion.id" @click="selectSuggestion(suggestion, 'queryName')">
+                                <li v-for="suggestion in nameSuggestions" :key="suggestion.id" @mousedown.prevent="selectSuggestion(suggestion, 'queryName')">
                                     @{{ suggestion.name }}
                                 </li>
                             </ul>
@@ -394,11 +394,11 @@
                         <!-- <p v-if="!loading" style="color: #dc3545; padding-left: 1rem">予測変換結果がありません</p> -->
                     </th>
                     <th class="custom-input">
-                        <input type="text" name="item_name_search" v-model="queryItem" @blur="clearSuggestions('itemSuggestions')" @input="fetchSuggestions(queryItem, 'item_name')" autocomplete="off" placeholder="品名を入力してください">
+                        <input type="text" name="item_name_search" v-model="queryItem" @blur="clearSuggestions('queryItem')" @input="fetchSuggestions(queryItem, 'item_name')" autocomplete="off" placeholder="品名を入力してください">
                         <div v-if="loadingItem" class="suggestions-list" style="color: #dc3545; padding-left: 1rem">品名「@{{ queryItem }}」の候補を検索中...</div>
                         <div v-if="itemSuggestions.length" class="suggestions-list">
                             <ul>
-                                <li v-for="suggestion in itemSuggestions" :key="suggestion.id" @click="selectSuggestion(suggestion, 'queryItem')">
+                                <li v-for="suggestion in itemSuggestions" :key="suggestion.id" @mousedown.prevent="selectSuggestion(suggestion, 'queryItem')">
                                     @{{ suggestion.item_name }}
                                 </li>
                             </ul>
@@ -636,42 +636,26 @@
         beforeUnmount() { // 768px判定
             window.removeEventListener("resize", this.updateMobileStatus);
         },
-        watch: {
-            // すべての query 系のプロパティを監視し、値が変更されたら `clearSuggestions` を実行
-            queryName() {
-                this.clearSuggestions("nameSuggestions");
-            },
-            queryItem() {
-                this.clearSuggestions("itemSuggestions");
-            }
-        },
         methods: {
             clearSuggestions(target) {
-                if (target === "nameSuggestions") {
+                if (target === "queryName") {
                     this.nameSuggestions = [];
-                    this.showNameSuggestions = false; // カーソルが外れたらサジェストをクリア
                 } else {
-                    this.itemSuggestions = [];  // itemSuggestions にセット
-                    this.showItemSuggestions = false; // カーソルが外れたらサジェストをクリア
+                    this.itemSuggestions = [];
                 }
             },
             // Lodash の debounce を使用して、入力の頻度を減らす
             debouncedFetchSuggestions: _.debounce(async function(queryKey, target) {
                 // ローディングの状態を変更
                 if (target === "name") {
-                    this.itemSuggestions = [];  // itemSuggestions にセット
                     this.loadingName = true;
                 } else {
-                    this.nameSuggestions = [];
                     this.loadingItem = true;
                 }
                 if (!queryKey) { // 検索文字列が2文字未満の場合
-                    // target = []; // サジェストをクリア
                     if (target === "name") {
-                        this.nameSuggestions = [];
                         this.loadingName = false;
                     } else {
-                        this.itemSuggestions = [];  // itemSuggestions にセット
                         this.loadingItem = false;
                     }
                     return; // APIリクエストを実行しない
@@ -696,14 +680,12 @@
                 // target の値が 'queryName' の場合
                 if (target === 'queryName') {
                     this.queryName = suggestion.name; // 'queryName' に 'name' を設定
-                    this.nameSuggestions = [];
                 }
                 // target の値が 'queryItem' の場合
                 else if (target === 'queryItem') {
                     this.queryItem = suggestion.item_name; // 'queryItem' に 'item_name' を設定
-                    this.itemSuggestions = [];
                 }
-                // target = [];
+                this.clearSuggestions(target);
             },
             updateMobileStatus() { // 768px判定
                 this.isMobile = window.matchMedia("(max-width: 768px)").matches;
