@@ -651,7 +651,7 @@
                     this.loadingItem = true;
                 }
 
-                if (!queryKey) { // 検索文字列が2文字未満の場合
+                if (queryKey.trim().length < 1) { // 検索文字列が1文字未満の場合
                     if (target === "name") {
                         this.loadingName = false;
                     } else if (target === "item_name") {
@@ -664,14 +664,14 @@
                 // サーバーへリクエストを送信し、検索結果を取得
                 const response = await axios.get(`/search?q=${queryKey}&column=${target}`);
                 // `target` が `nameSuggestions` の場合と `itemSuggestions` の場合で処理を分ける
-                if (target === "name") {
+                if (target === "name" && this.queryName) {
                     this.nameSuggestions = response.data;  // nameSuggestions にセット
                     this.loadingName = false; // ローディング終了
-                } else if (target === "item_name") {
+                } else if (target === "item_name" && this.queryItem) {
                     this.itemSuggestions = response.data;  // itemSuggestions にセット
                     this.loadingItem = false; // ローディング終了
                 }
-            }, 400), // 300ms の遅延後に実行
+            }, 300), // 300ms の遅延後に実行
             // ユーザーの入力が変わったらデバウンスされた関数を呼び出す
             fetchSuggestions(queryKey, target) {
                 this.debouncedFetchSuggestions(queryKey, target);
