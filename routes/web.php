@@ -16,15 +16,16 @@ Route::delete('/lendings/{id}', [LendingController::class, 'destroy'])->name('le
 Route::get('/lendings/confirm', [LendingController::class, 'confirm'])->name('lendings.confirm');
 Route::get('/export-csv', [CsvController::class, 'export'])->name('export.csv');
 
+
 use App\Models\Lending;
 use Illuminate\Http\Request;
-// use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Log;
 
 Route::get('/search', function (Request $request) {
     // クエリパラメータ 'q' を取得（ユーザーの検索入力）
     $query = $request->query('q');
     $column = $request->query('column'); // 'name' または 'item_name' など
-    // Log::info('Received column:', ['column' => $column]); // ログに記録
+    Log::info('Received column:', ['column' => $column]); // ログに記録
     // クエリが空なら空の配列を返す（全件取得せず負荷を軽減）
     if (!$query) {
         return response()->json([]);
@@ -38,9 +39,16 @@ Route::get('/search', function (Request $request) {
     }
 
     // カラム名が許可リストに含まれている場合のみ検索を実行
-    $results = Lending::where($column, 'LIKE', "%{$query}%") // 検索対象カラムを設定
-        ->select('id', $column) // 取得するカラムを動的に設定
+    $results = Lending::where($column, 'LIKE', "%{$query}%")
+        // ->select($column) // mysqlなら可能
         // ->limit(10) // 最大10件の結果を取得
+        // ->distinct() // 重複を削除
+        // ->orderBy('id', 'DESC') // IDの降順で並べる
+        // ->get();
+
+        ->select($column)
+        ->groupBy($column)
+        ->orderByRaw('MAX(id) DESC') // 最新データを優先
         ->get();
 
     // 結果をJSON形式で返す

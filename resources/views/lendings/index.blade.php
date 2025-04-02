@@ -51,6 +51,7 @@
         /* 格子線が重ならないように設定 */
         /* transform: scale(0.95); */
         /* テーブルを80%のサイズに縮小 */
+        max-width: 90%;
     }
 
     /* 表のセルスタイル */
@@ -381,7 +382,7 @@
                 <tr>
                     <th class="custom-input">
                         <input type="text" name="name_search" v-model="queryName" @blur="clearSuggestions('queryName')" @input="fetchSuggestions(queryName, 'name')" autocomplete="off" placeholder="名前を入力してください">
-                        <div v-if="loadingName" class="suggestions-list" style="color: #dc3545; padding-left: 1rem">名前「@{{ queryName }}」の候補を検索中...</div>
+                        <div v-if="loadingName" class="suggestions-list" style="color: #dc3545; padding: 1rem; font-size: 1.15rem !important;">候補を検索中…</div>
                         <!-- サジェスト候補リスト -->
                         <div v-if="nameSuggestions.length" class="suggestions-list">
                             <ul>
@@ -390,12 +391,12 @@
                                 </li>
                             </ul>
                         </div>
-                        
+                       
                         <!-- <p v-if="!loading" style="color: #dc3545; padding-left: 1rem">予測変換結果がありません</p> -->
                     </th>
                     <th class="custom-input">
                         <input type="text" name="item_name_search" v-model="queryItem" @blur="clearSuggestions('queryItem')" @input="fetchSuggestions(queryItem, 'item_name')" autocomplete="off" placeholder="品名を入力してください">
-                        <div v-if="loadingItem" class="suggestions-list" style="color: #dc3545; padding-left: 1rem">品名「@{{ queryItem }}」の候補を検索中...</div>
+                        <div v-if="loadingItem" class="suggestions-list" style="color: #dc3545; padding: 1rem; font-size: 1.15rem !important;">候補を検索中…</div>
                         <div v-if="itemSuggestions.length" class="suggestions-list">
                             <ul>
                                 <li v-for="suggestion in itemSuggestions" :key="suggestion.id" @mousedown.prevent="selectSuggestion(suggestion, 'queryItem')">
