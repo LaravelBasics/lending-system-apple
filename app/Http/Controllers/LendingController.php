@@ -19,9 +19,10 @@ class LendingController extends Controller
      */
     public function index(SearchRequest $request)
     {
-        $checkboxValue = $request->input('search_checkbox', 0); // デフォルトは 0
+        // $checkboxValue = $request->input('search_checkbox', 0); // デフォルトは 0
+        $checkboxValue = $request->input('search_checkbox', session('search_checkbox', 0)); // セッションの値をデフォルトに設定
 
-        // チェックボックスが選ばれている場合（値が1）
+        // チェックボックスが選ばれている場合（値が1）、またはsessionに保存されている時
         if ($checkboxValue == 1) {
             session(['search_checkbox' => $checkboxValue]); // セッションに保存
         } else {

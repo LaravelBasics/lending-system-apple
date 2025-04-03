@@ -434,8 +434,7 @@
                         <label for="search_checkbox"
                             style="font-size: 0.75rem; display: inline-block; color: #dc3545;">未返却</label>
                         <input type="hidden" name="search_checkbox" value="0">
-                        <input type="checkbox" name="search_checkbox" value="1" {{ session('search_checkbox') == '1'
-                            ? 'checked' : '' }} id="search_checkbox">
+                        <input type="checkbox" name="search_checkbox" value="1" {{ old('search_checkbox', session('search_checkbox')) == '1' ? 'checked' : '' }} id="search_checkbox">
                     </th>
                     <th style="text-align: center;">
                         <button type="submit" class="btn btn-info">検索</button>
