@@ -6,6 +6,7 @@ use App\Models\Lending;
 use Illuminate\Http\Request;
 use App\Http\Requests\SearchRequest;
 // use Symfony\Component\HttpFoundation\StreamedResponse; // データをストリームとして出力するために使用
+use Illuminate\Support\Facades\Auth;
 
 class CsvController extends Controller
 {
@@ -22,7 +23,9 @@ class CsvController extends Controller
         $checkboxValue = session('search_checkbox', 0); // 未返却のチェックボックスの値
 
         // クエリの作成
-        $query = Lending::query();
+        // $query = Lending::query();
+        // ユーザーIDで絞り込み
+        $query = Lending::where('user_id', Auth::id()); // ユーザーIDで絞り込み
 
         if ($searchCondition) {
             $query->when($searchCondition['name_search'] ?? null, function ($q, $name) {
@@ -61,6 +64,13 @@ class CsvController extends Controller
         // 検索結果を取得
         $lendings = $query->orderBy('id', 'desc')->get();
 
+        // 降順表示順を付与
+        $lendings->transform(function ($item, $key) use ($lendings) {
+            // ここでcount()を使って表示順を付与
+            $item->display_order = $lendings->count() - $key;  // ユーザーにとっての降順表示順
+            return $item;
+        });
+
         // CSVデータを出力するための無名関数（クロージャ）を作成しています。この関数内で、実際にCSVデータをファイルに書き込む処理を行います。
         $callback = function () use ($lendings) {
             $file = fopen('php://output', 'w'); //  PHPのストリームを使って直接ブラウザにデータを出力するために使用します。wは書き込みモードで開くことを意味
@@ -79,7 +89,7 @@ class CsvController extends Controller
 
             foreach ($lendings as $lending) {
                 fputcsv($file, [
-                    mb_convert_encoding($lending->id, 'SJIS-WIN', 'UTF-8'),
+                    mb_convert_encoding($lending->display_order, 'SJIS-WIN', 'UTF-8'),
                     mb_convert_encoding($lending->name, 'SJIS-WIN', 'UTF-8'),
                     mb_convert_encoding($lending->item_name, 'SJIS-WIN', 'UTF-8'),
                     mb_convert_encoding($lending->lend_date, 'SJIS-WIN', 'UTF-8'),

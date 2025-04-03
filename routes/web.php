@@ -51,6 +51,7 @@ Route::middleware(['auth'])->group(function () {
 
 use App\Models\Lending;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/search', function (Request $request) {
     // クエリパラメータ 'q' を取得（ユーザーの検索入力）
@@ -69,7 +70,10 @@ Route::get('/search', function (Request $request) {
     }
 
     // カラム名が許可リストに含まれている場合のみ検索を実行
-    $results = Lending::where($column, 'LIKE', "%{$query}%")
+    // $results = Lending::where($column, 'LIKE', "%{$query}%")
+    // ユーザーIDで絞り込み
+    $results = Lending::where('user_id', Auth::id()) // ログインユーザーのデータに絞り込む
+        ->where($column, 'LIKE', "%{$query}%") // 検索クエリで絞り込む
         ->select($column)
         ->groupBy($column)
         ->orderByRaw('MAX(id) DESC') // 最新データを優先

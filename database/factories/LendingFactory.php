@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Lending;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\User;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Lending>
@@ -19,7 +20,7 @@ class LendingFactory extends Factory
      */
     public function definition(): array
     {
-        $faker = \Faker\Factory::create('ja_JP');// 日本語？
+        $faker = \Faker\Factory::create('ja_JP');// 日本語
 
         // 品名リストを用意
         $itemNames = [
@@ -34,9 +35,13 @@ class LendingFactory extends Factory
             'webカメラ', '三脚',
         ];
 
+        // ランダムなユーザーを取得（または特定のユーザーIDを指定）
+        // $user = User::inRandomOrder()->first(); // ランダムにユーザーを取得
+
         $returnDate = $faker->optional()->dateTimeBetween('now', '+1 year');
 
         return [
+            // 'user_id' => $user->id, // ランダムに選ばれたユーザーのIDを設定
             'name' => $faker->name, // ランダムな名前
             'item_name' => $faker->randomElement($itemNames), // ランダムな品名
             'lend_date' => $faker->dateTimeBetween('2020-01-01', '2024-12-31')->format('Y-m-d'), // ランダムな貸出日

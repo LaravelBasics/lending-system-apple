@@ -12,11 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('lendings', function (Blueprint $table) {
-            $table->id();//主キー
-            $table->string('name');// 貸出者の名前（手動入力）
+            $table->id(); //主キー
+            $table->string('name'); // 貸出者の名前（手動入力）
             $table->string('item_name'); // 品名（手動入力）
-            $table->date('lend_date');// 貸出日
-            $table->date('return_date')->nullable();// 返却日（NULL許容）
+            $table->date('lend_date'); // 貸出日
+            $table->date('return_date')->nullable(); // 返却日（NULL許容）
+            // user_idカラムの追加
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

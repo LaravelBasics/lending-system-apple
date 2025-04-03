@@ -255,7 +255,7 @@
                 @foreach ($lendings as $lending)
                 {{-- 返却日がnullの時、cssで色付け --}}
                 <tr {{ !$lending->return_date ? 'class=pending-return' : '' }}>
-                    <td>{{ $lending->id }}</td>
+                    <td>{{ $lending->display_order }}</td>
                     <td>{{ $lending->name }}</td>
                     <td>{{ $lending->item_name }}</td>
                     <td>{{ $lending->lend_date }}</td>
@@ -297,10 +297,8 @@
                 <div class="modal-header">
                     <h5 class="modal-title" id="showLabel">
                         <span style="color: #e74c3c;">
-                        ID:
-                        @{{ destroyLendingId }}
+                            削除すると復元できません。削除しますか？
                         </span>
-                        を削除すると復元できません。削除しますか？
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>

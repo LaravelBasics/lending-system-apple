@@ -9,6 +9,8 @@ use App\Http\Requests\SearchRequest;
 use App\Models\Lending;
 use Illuminate\Support\Facades\DB;
 use Exception;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class LendingController extends Controller
 {
@@ -38,7 +40,10 @@ class LendingController extends Controller
         $searchCondition = $request->session()->get('search_condition', []);
 
         // クエリビルダーの基本設定
-        $query = Lending::query();
+        // $query = Lending::query();
+
+        // クエリビルダーの基本設定
+        $query = Lending::where('user_id', Auth::id()); // ユーザーIDで絞り込み
 
         // セッションに値があれば検索条件を追加
         if ($searchCondition) {
@@ -86,7 +91,7 @@ class LendingController extends Controller
                         // 例: 2024-01 の場合
                         $startDate = $returnDate . '-01';
                         $endDate = date('Y-m-t', strtotime($startDate)); // 月末日を自動取得
-                    
+
                         $q->whereBetween('return_date', [$startDate, $endDate]);
                     }
                     // 日付（YYYY-MM-DD）の場合
@@ -102,6 +107,17 @@ class LendingController extends Controller
         // 検索結果を取得
         $lendings = $query->paginate(20);
 
+        // 降順表示順を付与（降順）
+        $lendings->getCollection()->transform(function ($item, $key) use ($lendings) {
+            // 現在のページの最初の表示順番号を計算
+            $displayOrder = ($lendings->currentPage() - 1) * $lendings->perPage() + $key + 1;
+        
+            // ユーザーにとっての降順表示順
+            $item->display_order = $lendings->total() - $displayOrder + 1;
+        
+            return $item;
+        }); // bladeでアクセスする際、forach() as lending->display_orderにする
+
         return view('lendings.index', compact('lendings'));
     }
 
@@ -110,12 +126,16 @@ class LendingController extends Controller
      */
     public function store(StoreLendingRequest $request)
     {
+        // 認証されたユーザーIDを取得
+        $userId = Auth::id();
+
         try {
             Lending::create([
                 'name' => $request->input('name'),
                 'item_name' => $request->input('item_name'),
                 'lend_date' => $request->input('lend_date'),
                 'return_date' => $request->input('return_date'),
+                'user_id' => $userId, // 認証ユーザーIDを保存
             ]);
             return redirect()->route('lendings.index')
                 ->with('flashMessage', '保存しました')
@@ -146,6 +166,13 @@ class LendingController extends Controller
         try {
             $lendings = Lending::findOrFail($id);
 
+            // 認証ユーザーがこの貸出レコードの所有者かどうかをチェック
+            if ($lendings->user_id !== Auth::id()) {
+                return redirect()->route('lendings.index')
+                    ->with('flashMessage', '権限がありません')
+                    ->with('flashStatus', 'danger');
+            }
+
             $lendings->update([
                 'name' => $request->input('name_update'),
                 'item_name' => $request->input('item_name_update'),
@@ -172,6 +199,13 @@ class LendingController extends Controller
         // 対象のレコードを取得
         $lending = Lending::findOrFail($id);
 
+        // 認証ユーザーがこの貸出レコードの所有者かどうかをチェック
+        if ($lending->user_id !== Auth::id()) {
+            return redirect()->route('lendings.confirm')
+                ->with('flashMessage', '権限がありません')
+                ->with('flashStatus', 'danger');
+        }
+
         // レコードを削除
         $lending->delete();
 
@@ -183,8 +217,26 @@ class LendingController extends Controller
     public function confirm()
     {
         // 削除専用ページで表示するデータを全件取得
-        $query = Lending::orderBy('id', 'desc');
+        $query = Lending::where('user_id', Auth::id()); // ユーザーIDで絞り込み
+        $query->orderBy('id', 'desc');
         $lendings = $query->paginate(20);
+
+        // 昇順表示順を付与
+        // $lendings->getCollection()->transform(function ($item, $key) {
+        //     $item->display_order = $key + 1;  // ユーザーにとっての表示順
+        //     return $item;
+        // });
+
+        // 降順表示順を付与（降順）
+        $lendings->getCollection()->transform(function ($item, $key) use ($lendings) {
+            // 現在のページの最初の表示順番号を計算
+            $displayOrder = ($lendings->currentPage() - 1) * $lendings->perPage() + $key + 1;
+        
+            // ユーザーにとっての降順表示順
+            $item->display_order = $lendings->total() - $displayOrder + 1;
+        
+            return $item;
+        });
 
         return view('lendings.confirm', compact('lendings'));
     }

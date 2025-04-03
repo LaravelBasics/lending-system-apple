@@ -27,6 +27,7 @@
 
     /* アプリ説明用 */
     .help {
+        font-size: 1rem;
         padding: 0.85rem 1.25rem;
         /* 内容と枠線の間隔を確保 */
         background-color: rgb(248, 248, 248);
@@ -346,7 +347,7 @@
                             {{-- <small>(例) 山田太郎</small> --}}
                             <div v-if="validationErrors">
                                 @error('name')
-                                <small style="color: #dc3545;">※ {{ $message }}</small>
+                                <small style="color: #dc3545; display: inline-block; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">※{{ $message }}</small>
                                 @enderror
                             </div>
                         </th>
@@ -356,7 +357,7 @@
                             {{-- <small>(例) PC体験用No1</small> --}}
                             <div v-if="validationErrors">
                                 @error('item_name')
-                                <small style="color: #dc3545;">※ {{ $message }}</small>
+                                <small style="color: #dc3545; display: inline-block; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">※{{ $message }}</small>
                                 @enderror
                             </div>
                         </th>
@@ -366,7 +367,7 @@
                             {{-- <small>※ 貸出日を選択</small> --}}
                             <div v-if="validationErrors">
                                 @error('lend_date')
-                                <small style="color: #dc3545;">※ {{ $message }}</small>
+                                <small style="color: #dc3545; display: inline-block; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">※{{ $message }}</small>
                                 @enderror
                             </div>
                         </th>
@@ -375,7 +376,7 @@
                             <small>※返却済の場合選択</small>
                             <div v-if="validationErrors">
                                 @error('return_date')
-                                <small style="color: #dc3545;">※ {{ $message }}</small>
+                                <small style="color: #dc3545; display: inline-block; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">※{{ $message }}</small>
                                 @enderror
                             </div>
                         </th>
@@ -394,7 +395,7 @@
             <table class="simple-table">
                 <tr>
                     <th class="custom-input">
-                        <input type="text" name="name_search" v-model="queryName" @blur="clearSuggestions" @input="fetchSuggestions(queryName, 'name')" autocomplete="off" placeholder="名前を入力してください">
+                        <input style="color: #007bff;" type="text" name="name_search" v-model="queryName" @blur="clearSuggestions" @input="fetchSuggestions(queryName, 'name')" autocomplete="off" placeholder="名前を入力してください">
                         <div v-if="loadingName" class="suggestions-list" style="color: #dc3545; padding: 1rem; font-size: 1.15rem !important;">候補を検索中…</div>
                         <!-- サジェスト候補リスト -->
                         <div v-if="nameSuggestions.length" class="suggestions-list">
@@ -408,7 +409,7 @@
                         <!-- <p v-if="!loading" style="color: #dc3545; padding-left: 1rem">予測変換結果がありません</p> -->
                     </th>
                     <th class="custom-input">
-                        <input type="text" name="item_name_search" v-model="queryItem" @blur="clearSuggestions" @input="fetchSuggestions(queryItem, 'item_name')" autocomplete="off" placeholder="品名を入力してください">
+                        <input style="color: #007bff;" type="text" name="item_name_search" v-model="queryItem" @blur="clearSuggestions" @input="fetchSuggestions(queryItem, 'item_name')" autocomplete="off" placeholder="品名を入力してください">
                         <div v-if="loadingItem" class="suggestions-list" style="color: #dc3545; padding: 1rem; font-size: 1.15rem !important;">候補を検索中…</div>
                         <div v-if="itemSuggestions.length" class="suggestions-list">
                             <ul>
@@ -419,12 +420,12 @@
                         </div>
                     </th>
                     <th class="custom-input">
-                        <input type="text" name="lend_date_search"
+                        <input style="color: #007bff;" type="text" name="lend_date_search"
                             value="{{ old('lend_date_search', session('search_condition.lend_date_search')) }}"
                             placeholder="貸出日を入力してください">
                     </th>
                     <th class="custom-input">
-                        <input type="text" name="return_date_search"
+                        <input style="color: #007bff;" type="text" name="return_date_search"
                             value="{{ old('return_date_search', session('search_condition.return_date_search')) }}"
                             placeholder="返却日を入力してください">
                     </th>
@@ -464,12 +465,12 @@
                 <tbody>
                     @foreach ($lendings as $lending)
                     <tr v-if="editLendingId == {{ $lending->id }}">
-                        <td>{{ $lending->id }}</td>
+                        <td>{{ $lending->display_order }}</td>
                         <td class="custom-input">
                             <input name="name_update" v-model="editLendingUpdate.name_update">
                             <div v-if="validationErrors">
                                 @error('name_update')
-                                <small style="color: #dc3545;">※{{ $message }}</small>
+                                <small style="color: #dc3545; display: inline-block; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">※{{ $message }}</small>
                                 @enderror
                             </div>
                         </td>
@@ -477,7 +478,7 @@
                             <input name="item_name_update" v-model="editLendingUpdate.item_name_update">
                             <div v-if="validationErrors">
                                 @error('item_name_update')
-                                <small style="color: #dc3545;">※{{ $message }}</small>
+                                <small style="color: #dc3545; display: inline-block; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">※{{ $message }}</small>
                                 @enderror
                             </div>
                         </td>
@@ -485,7 +486,7 @@
                             <input name="lend_date_update" v-model="editLendingUpdate.lend_date_update">
                             <div v-if="validationErrors">
                                 @error('lend_date_update')
-                                <small style="color: #dc3545;">※{{ $message }}</small>
+                                <small style="color: #dc3545; display: inline-block; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">※{{ $message }}</small>
                                 @enderror
                             </div>
                         </td>
@@ -494,7 +495,7 @@
                                 v-model="editLendingUpdate.return_date_update">
                             <div v-if="validationErrors">
                                 @error('return_date_update')
-                                <small style="color: #dc3545;">※{{ $message }}</small>
+                                <small style="color: #dc3545; display: inline-block; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">※{{ $message }}</small>
                                 @enderror
                             </div>
                         </td>
@@ -505,7 +506,7 @@
                     </tr>
                     {{-- 返却日がnullの時、cssで色付け --}}
                     <tr {{ !$lending->return_date ? 'class=pending-return' : '' }} v-else>
-                        <td>{{ $lending->id }}</td>
+                        <td>{{ $lending->display_order }}</td>
                         <td>{{ $lending->name }}</td>
                         <td>{{ $lending->item_name }}</td>
                         <td>{{ $lending->lend_date }}</td>
@@ -552,10 +553,8 @@
                 <div class="modal-header">
                     <h5 class="modal-title" id="showEditLabel">
                         <sapn style="color: #e74c3c">
-                            ID:
-                            @{{ todayEditId }}
+                            今日の日付で返却しますか？
                         </sapn>
-                        今日の日付で返却しますか？
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -610,33 +609,47 @@
                     </form>
                 </div>
                 <p class="help">
-                    <span style="color: #007BFF;">①</span>登録は、名前、品名（例：PC、マウス、傘など）、貸出日、&ensp;3つが設定できます。
+                    <span style="color: #007BFF;">①登録機能</span>
                     <br>
-                    &ensp;&ensp;貸出日は自動で今日の日付が設定されますが、変更する場合はボックスをクリックし、カレンダーから選択します。
-                    <br><br>
-                    <span style="color: #007BFF;">②</span>返却時には「即日返却」ボタンを押すと自動的に今日の日付が入力され、入力ミスを防ぎます。
-                    <br><br>
-                    <span style="color: #007BFF;">③</span>名前や品名に誤りがあった場合や、登録時に日付を誤って選択した場合は、編集ボタンで修正できます。
-                    <br><br>
-                    <span style="color: #007BFF;">④</span>最新のデータは降順で表示され、ページネーションは一番下に配置されています。
-                    <br><br>
-                    <span style="color: #007BFF;">⑤</span>チェックボックスを使って未返却のデータのみ検索することが可能で、
+                    ユーザーは、名前、品名（例：PC、マウス、傘など）、貸出日の3つを登録できます。
                     <br>
-                    &ensp;&ensp;西暦や月単位での部分検索（例：2025 や 2025-01 など）もサポートしています。
+                    貸出日は自動的に今日の日付が設定されますが、変更する場合はボックスをクリックしてカレンダーから選択することができます。
                     <br>
-                    &ensp;&ensp;貸出日と返却日、両方を使用する場合は、AND検索になります。以下は検索例です。
+                    <span style="color: #007BFF;">②返却機能</span>
                     <br>
-                    &ensp;&ensp;貸出日が 2025 と 返却日が 2025 で検索すると、
+                    返却時には「即日返却」ボタンを押すと自動的に今日の日付が入力され、入力ミスを防ぐことができます。
                     <br>
-                    &ensp;&ensp;2025年に貸し出して、かつ、2025年に返却済みのデータが検索できます。
+                    <span style="color: #007BFF;">③編集機能</span>
                     <br>
-                    &ensp;&ensp;また、検索バーに文字を入力すると、データベースに登録された関連する候補が自動的に表示されます。
-                    <br><br>
-                    <span style="color: #007BFF;">⑥</span>検索結果に基づいたデータを、CSV形式でダウンロードできるボタンを提供しています。
+                    名前や品名に誤りがあった場合、または登録時に日付を誤って選択した場合は、編集ボタンを使って簡単に修正できます。
                     <br>
-                    &ensp;&ensp;CSVダウンロードボタンを押すと、データをExcel形式で降順にダウンロードできます。
-                    <br><br>
-                    <span style="color: #007BFF;">⑦</span>データ量の増加に備えて、削除専用ページを設置し、不要なデータを簡単に削除できます。
+                    <span style="color: #007BFF;">④ユーザー別データ表示</span>
+                    <br>
+                    ログイン中のユーザーごとに、最新のデータが降順で表示され、ページネーションは一番下に配置されています。
+                    <br>
+                    <span style="color: #007BFF;">⑤検索機能</span>
+                    <br>
+                    検索バーに文字を入力すると、データベースに登録された関連する候補が自動的に表示されます。
+                    <br>
+                    チェックボックスを使って未返却のデータのみ検索することが可能です。
+                    <br>
+                    また、西暦や月単位での部分検索（例：2025 や 2025-01 など）にも対応しています。
+                    <br>
+                    貸出日と返却日両方を使用する場合は、AND検索となります。
+                    <br>
+                    例：貸出日が2025年、返却日が2025年の場合、
+                    <br>
+                    2025年に貸し出して2025年に返却されたデータが検索されます。
+                    <br>
+                    <span style="color: #007BFF;">⑥CSVダウンロード機能</span>
+                    <br>
+                    検索結果に基づいたデータをCSV形式でダウンロードできるボタンがあります。
+                    <br>
+                    ボタンを押すと、データがExcel形式で降順にダウンロードされます。
+                    <br>
+                    <span style="color: #007BFF;">⑦データ削除機能</span>
+                    <br>
+                    データ量の増加に備え、削除専用ページを設置しています。不要なデータを簡単に削除できるようになっています。
                     <span style="display: block; margin-bottom: 1em;"></span>
                 </p>
             </div>
@@ -712,20 +725,13 @@
             },
             // Lodash の debounce を使用して、入力の頻度を減らす
             debouncedFetchSuggestions: _.debounce(async function(queryKey, target) {
-                // ローディングの状態を変更
-                if (target === "name") {
-                    this.loadingName = true;
-                } else if (target === "item_name") {
-                    this.loadingItem = true;
-                }
-
                 if (queryKey.trim().length < 1) { // 検索文字列が1文字未満の場合
+                    this.clearSuggestions();
                     if (target === "name") {
                         this.loadingName = false;
                     } else if (target === "item_name") {
                         this.loadingItem = false;
                     }
-                    this.clearSuggestions();
                     return; // APIリクエストを実行しない
                 }
 
@@ -742,6 +748,14 @@
             }, 300), // 300ms の遅延後に実行
             // ユーザーの入力が変わったらデバウンスされた関数を呼び出す
             fetchSuggestions(queryKey, target) {
+                // ローディングの状態を変更
+                if (target === "name") {
+                    this.nameSuggestions = [];
+                    this.loadingName = true;
+                } else if (target === "item_name") {
+                    this.itemSuggestions = [];
+                    this.loadingItem = true;
+                }
                 this.debouncedFetchSuggestions(queryKey, target);
             },
             selectSuggestion(suggestion, target) {
