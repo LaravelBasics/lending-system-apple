@@ -447,9 +447,6 @@
 
     {{-- 編集フォームと登録済みデータの表示 --}}
     @if ($lendings->isNotEmpty())
-    <form :action="`{{ route('lendings.update', ':id') }}`.replace(':id', editLendingId)" method="POST">
-        @csrf
-        @method('PUT')
         <div class="table-container">
             <table class="simple-table">
                 <thead>
@@ -500,8 +497,7 @@
                             </div>
                         </td>
                         <td style="text-align: center;">
-                            <input type="hidden" name="id_update" :value="editLendingId">
-                            <button type="submit" class="btn btn-success">登録</button>
+                            <button type="button" @click="showModal2" class="btn btn-success">登録</button>
                         </td>
                     </tr>
                     {{-- 返却日がnullの時、cssで色付け --}}
@@ -541,6 +537,34 @@
                 </tbody>
             </table>
         </div>
+
+    {{-- 編集確認モーダル --}}
+    <form :action="`{{ route('lendings.update', ':id') }}`.replace(':id', editLendingId)" method="POST">
+    @csrf
+    @method('PUT')
+    <div class="modal fade" id="Modal2" tabindex="-1" aria-labelledby="showLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" style="max-width: 10cm;">
+            <div class="modal-content" style="height: 4cm;">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="showLabel">
+                        <span style="color: #e74c3c">
+                            本当に登録しますか？
+                        </span>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body d-flex justify-content-between align-items-center">
+                    <input type="hidden" name="name_update" :value="editLendingUpdate.name_update">
+                    <input type="hidden" name="item_name_update" :value="editLendingUpdate.item_name_update">
+                    <input type="hidden" name="lend_date_update" :value="editLendingUpdate.lend_date_update">
+                    <input type="hidden" name="return_date_update" :value="editLendingUpdate.return_date_update">
+                    <input type="hidden" name="id_update" :value="editLendingId">
+                    <button type="submit" class="btn btn-success">登録</button>
+                    <button type="button" @click="cancelEdit" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
+                </div>
+            </div>
+        </div>
+    </div>
     </form>
     @else
     <p style="color: #dc3545; padding-left: 1rem;">データが見つかりません</p>
@@ -552,9 +576,9 @@
             <div class="modal-content" style="height: 10cm;">
                 <div class="modal-header">
                     <h5 class="modal-title" id="showEditLabel">
-                        <sapn style="color: #e74c3c">
+                        <span style="color: #e74c3c">
                             今日の日付で返却しますか？
-                        </sapn>
+                        </span>
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -600,7 +624,7 @@
                 <div class="modal-header">
                     <h5 class="modal-title" id="ModalLabel">
                     <strong style="font-size: 1.2rem; position: relative; top: 0.05rem; display: inline-block;">
-                        <i class="fa-solid fa-chalkboard-teacher" style="color: #ffce47;"></i> アプリの説明
+                        <i class="fa-solid fa-chalkboard-teacher" style="color: #ffce47;"></i> 操作の説明
                     </strong>   
                     </h5>
                     <form action="{{ route('logout') }}" method="POST">
@@ -611,27 +635,39 @@
                 <p class="help">
                     <span style="color: #007BFF;">①登録機能</span>
                     <br>
-                    ユーザーは、名前、品名（例：PC、マウス、傘など）、貸出日の3つを登録できます。
+                    「名前」&ensp;「品名（例：PC、マウス、傘など）」&ensp;「貸出日」の3つを入力して登録することができます。
                     <br>
-                    貸出日は自動的に今日の日付が設定されますが、変更する場合はボックスをクリックしてカレンダーから選択することができます。
+                    貸出日はデフォルトで今日の日付が設定されていますが、日付を変更する場合はボックスをクリックしてカレンダーから日付を選択できます。
                     <br>
                     <span style="color: #007BFF;">②返却機能</span>
                     <br>
-                    返却時には「即日返却」ボタンを押すと自動的に今日の日付が入力され、入力ミスを防ぐことができます。
+                    返却する際には「即日返却」ボタンを押すことで、自動的に今日の日付が入力され、入力ミスを防げます。
                     <br>
                     <span style="color: #007BFF;">③編集機能</span>
                     <br>
-                    名前や品名に誤りがあった場合、または登録時に日付を誤って選択した場合は、編集ボタンを使って簡単に修正できます。
+                    編集したいデータの横にある「編集」ボタンを押すと、データが編集モードに切り替わり、フォームが表示されます。
+                    <br>
+                    「名前」&ensp;「品名」&ensp;「日付」などを編集し、変更内容を保存する準備が整います。
+                    <br>
+                    編集が完了したら、「登録」ボタンを押すと、登録確認モーダルが表示され、「本当に登録しますか？」と確認されます。
+                    <br>
+                    モーダル内にある「登録」ボタンを押すと編集内容が送信され、登録が完了します。
+                    <br>
+                    エラーの際、入力内容は保持された状態で再度編集が可能です。
+                    <br>
+                    「キャンセル」ボタンを押すと、モーダルが閉じ、編集モードが終了します。再度編集する場合は、「編集」ボタンを押して編集モードに戻れます。
+                    <br>
+                    モーダル内の「✖」ボタンや暗い画面部分をクリックするとモーダルは閉じますが、編集モードはそのまま維持されます。
                     <br>
                     <span style="color: #007BFF;">④ユーザー別データ表示</span>
                     <br>
-                    ログイン中のユーザーごとに、最新のデータが降順で表示され、ページネーションは一番下に配置されています。
+                    ログイン中のユーザーに関連するデータが降順で表示され、ページネーションはその下に配置されています。
                     <br>
                     <span style="color: #007BFF;">⑤検索機能</span>
                     <br>
-                    検索バーに文字を入力すると、データベースに登録された関連する候補が自動的に表示されます。
+                    検索バーに文字を入力すると、関連するデータがデータベースから自動的に表示されます。
                     <br>
-                    チェックボックスを使って未返却のデータのみ検索することが可能です。
+                    チェックボックスを使って未返却のデータのみを検索できます。
                     <br>
                     また、西暦や月単位での部分検索（例：2025 や 2025-01 など）にも対応しています。
                     <br>
@@ -639,17 +675,17 @@
                     <br>
                     例：貸出日が2025年、返却日が2025年の場合、
                     <br>
-                    2025年に貸し出して2025年に返却されたデータが検索されます。
+                    2025年に貸し出して2025年に返却されたデータが表示されます。
                     <br>
                     <span style="color: #007BFF;">⑥CSVダウンロード機能</span>
                     <br>
-                    検索結果に基づいたデータをCSV形式でダウンロードできるボタンがあります。
+                    検索結果に基づいて、データをCSV形式でダウンロードできるボタンがあります。
                     <br>
                     ボタンを押すと、データがExcel形式で降順にダウンロードされます。
                     <br>
                     <span style="color: #007BFF;">⑦データ削除機能</span>
                     <br>
-                    データ量の増加に備え、削除専用ページを設置しています。不要なデータを簡単に削除できるようになっています。
+                    データ量が増加した場合に備え、削除専用ページを設置しています。不要なデータを簡単に削除できます。
                     <span style="display: block; margin-bottom: 1em;"></span>
                 </p>
             </div>
@@ -715,8 +751,16 @@
             window.removeEventListener("resize", this.updateMobileStatus);
         },
         methods: {
+            cancelEdit() {
+                // キャンセルボタンでeditLendingIdをnullに設定
+                this.editLendingId = null;
+            },
             showModal() {
                 const modal = new bootstrap.Modal(document.getElementById('Modal'));
+                modal.show();
+            },
+            showModal2() {
+                const modal = new bootstrap.Modal(document.getElementById('Modal2'));
                 modal.show();
             },
             clearSuggestions() {
