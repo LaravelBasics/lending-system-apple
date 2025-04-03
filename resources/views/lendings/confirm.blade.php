@@ -229,7 +229,7 @@
 <div>
     <h1 class="title">削除専用</h1>
     <div class="element">
-        <a href="{{ route('lendings.index') }}">TOPページ</a>
+        <a href="{{ route('lendings.index') }}">備品管理ページ</a>
     </div>
 
     <div>

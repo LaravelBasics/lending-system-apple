@@ -6,6 +6,6 @@
 
 @section('content')
 <h1>
-    <a href="{{ route('lendings.index') }}">TOPページ</a>
+    <a href="{{ route('home') }}">TOPページ</a>
 </h1>
 @endsection

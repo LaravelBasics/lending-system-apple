@@ -6,15 +6,47 @@ use App\Livewire\Settings\Profile;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LendingController;
 use App\Http\Controllers\CsvController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\LogoutController;
+
+// トップページのルート
+Route::get('/', [HomeController::class, 'index'])->name('home');
+
+// ダッシュボードのルート（ログインが必要）
+Route::get('/dashboard', [HomeController::class, 'dashboard'])->middleware('auth')->name('dashboard');
+
+// ユーザー登録のルート
+Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register')->middleware('guest');
+Route::post('register', [RegisterController::class, 'register']);
+
+// ログインのルート
+Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('login', [LoginController::class, 'login']);
+
+// ログアウトのルート
+Route::post('logout', [LogoutController::class, 'logout'])->name('logout');
 
 
-Route::get('/lendings', [LendingController::class, 'index'])->name('lendings.index');
-Route::post('/lendings', [LendingController::class, 'store'])->name('lendings.store');
-Route::put('/lendings/{id}', [LendingController::class, 'update'])->name('lendings.update');
-Route::delete('/lendings/{id}', [LendingController::class, 'destroy'])->name('lendings.destroy');
+// ログイン必須の貸出管理ルート
+Route::middleware(['auth'])->group(function () {
+    Route::get('/lendings', [LendingController::class, 'index'])->name('lendings.index');
+    Route::post('/lendings', [LendingController::class, 'store'])->name('lendings.store');
+    Route::get('/export-csv', [CsvController::class, 'export'])->name('export.csv');
+    Route::get('/lendings/confirm', [LendingController::class, 'confirm'])->name('lendings.confirm');
+    Route::put('/lendings/{id}', [LendingController::class, 'update'])->name('lendings.update');
+    Route::delete('/lendings/{id}', [LendingController::class, 'destroy'])->name('lendings.destroy');
+});
 
-Route::get('/lendings/confirm', [LendingController::class, 'confirm'])->name('lendings.confirm');
-Route::get('/export-csv', [CsvController::class, 'export'])->name('export.csv');
+
+// Route::get('/lendings', [LendingController::class, 'index'])->name('lendings.index');
+// Route::post('/lendings', [LendingController::class, 'store'])->name('lendings.store');
+// Route::put('/lendings/{id}', [LendingController::class, 'update'])->name('lendings.update');
+// Route::delete('/lendings/{id}', [LendingController::class, 'destroy'])->name('lendings.destroy');
+
+// Route::get('/lendings/confirm', [LendingController::class, 'confirm'])->name('lendings.confirm');
+// Route::get('/export-csv', [CsvController::class, 'export'])->name('export.csv');
 
 
 use App\Models\Lending;
@@ -47,20 +79,20 @@ Route::get('/search', function (Request $request) {
     return response()->json($results);
 });
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+// Route::get('/', function () {
+//     return view('welcome');
+// })->name('home');
 
-Route::view('dashboard', 'dashboard')
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
+// Route::view('dashboard', 'dashboard')
+//     ->middleware(['auth', 'verified'])
+//     ->name('dashboard');
 
-Route::middleware(['auth'])->group(function () {
-    Route::redirect('settings', 'settings/profile');
+// Route::middleware(['auth'])->group(function () {
+//     Route::redirect('settings', 'settings/profile');
 
-    Route::get('settings/profile', Profile::class)->name('settings.profile');
-    Route::get('settings/password', Password::class)->name('settings.password');
-    Route::get('settings/appearance', Appearance::class)->name('settings.appearance');
-});
+//     Route::get('settings/profile', Profile::class)->name('settings.profile');
+//     Route::get('settings/password', Password::class)->name('settings.password');
+//     Route::get('settings/appearance', Appearance::class)->name('settings.appearance');
+// });
 
-require __DIR__ . '/auth.php';
+// require __DIR__ . '/auth.php';

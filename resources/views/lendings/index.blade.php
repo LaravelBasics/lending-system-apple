@@ -25,6 +25,14 @@
         /* 文字を太くする */
     }
 
+    /* アプリ説明用 */
+    .help {
+        padding: 0.85rem 1.25rem;
+        /* 内容と枠線の間隔を確保 */
+        background-color: rgb(248, 248, 248);
+        /* 背景色（灰色） */
+    }
+
     /* 表全体の配置 */
     .table-container {
         display: flex;
@@ -296,7 +304,12 @@
             <a href="{{ route('export.csv') }}"><button type="button">CSVをダウンロード</button></a>
         </div>
         <div>
-            <h1 class="title">備品管理</h1>
+            <h1 class="title">
+                備品管理：
+                    <span @click="showModal" class="custom-link" style="cursor: pointer; color: #007BFF; text-decoration: underline;">
+                        {{ Auth::user()->name }}
+                    </span>
+            </h1>
         </div>
         <div class="elementleft">
             <a href="{{ route('lendings.confirm') }}">削除専用ページに移動</a>
@@ -579,6 +592,57 @@
             </div>
         </div>
     </div>
+
+    {{-- ユーザー情報モーダル --}}
+    <!-- 備品管理モーダル -->
+    <div class="modal fade" id="Modal" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" style="max-width: 52.5rem;">
+            <div class="modal-content" style="height: 37.80rem;">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ModalLabel">
+                    <strong style="font-size: 1.2rem; position: relative; top: 0.05rem; display: inline-block;">
+                        <i class="fa-solid fa-chalkboard-teacher" style="color: #ffce47;"></i> アプリの説明
+                    </strong>   
+                    </h5>
+                    <form action="{{ route('logout') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="btn btn-danger">ログアウト</button>
+                    </form>
+                </div>
+                <p class="help">
+                    <span style="color: #007BFF;">①</span>登録は、名前、品名（例：PC、マウス、傘など）、貸出日、&ensp;3つが設定できます。
+                    <br>
+                    &ensp;&ensp;貸出日は自動で今日の日付が設定されますが、変更する場合はボックスをクリックし、カレンダーから選択します。
+                    <br><br>
+                    <span style="color: #007BFF;">②</span>返却時には「即日返却」ボタンを押すと自動的に今日の日付が入力され、入力ミスを防ぎます。
+                    <br><br>
+                    <span style="color: #007BFF;">③</span>名前や品名に誤りがあった場合や、登録時に日付を誤って選択した場合は、編集ボタンで修正できます。
+                    <br><br>
+                    <span style="color: #007BFF;">④</span>最新のデータは降順で表示され、ページネーションは一番下に配置されています。
+                    <br><br>
+                    <span style="color: #007BFF;">⑤</span>チェックボックスを使って未返却のデータのみ検索することが可能で、
+                    <br>
+                    &ensp;&ensp;西暦や月単位での部分検索（例：2025 や 2025-01 など）もサポートしています。
+                    <br>
+                    &ensp;&ensp;貸出日と返却日、両方を使用する場合は、AND検索になります。以下は検索例です。
+                    <br>
+                    &ensp;&ensp;貸出日が 2025 と 返却日が 2025 で検索すると、
+                    <br>
+                    &ensp;&ensp;2025年に貸し出して、かつ、2025年に返却済みのデータが検索できます。
+                    <br>
+                    &ensp;&ensp;また、検索バーに文字を入力すると、データベースに登録された関連する候補が自動的に表示されます。
+                    <br><br>
+                    <span style="color: #007BFF;">⑥</span>検索結果に基づいたデータを、CSV形式でダウンロードできるボタンを提供しています。
+                    <br>
+                    &ensp;&ensp;CSVダウンロードボタンを押すと、データをExcel形式で降順にダウンロードできます。
+                    <br><br>
+                    <span style="color: #007BFF;">⑦</span>データ量の増加に備えて、削除専用ページを設置し、不要なデータを簡単に削除できます。
+                    <span style="display: block; margin-bottom: 1em;"></span>
+                </p>
+            </div>
+        </div>
+    </div>
+
 </div>
 @endsection
 
@@ -638,6 +702,10 @@
             window.removeEventListener("resize", this.updateMobileStatus);
         },
         methods: {
+            showModal() {
+                const modal = new bootstrap.Modal(document.getElementById('Modal'));
+                modal.show();
+            },
             clearSuggestions() {
                 this.nameSuggestions = [];
                 this.itemSuggestions = [];

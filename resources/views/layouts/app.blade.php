@@ -75,6 +75,7 @@
 </head>
 
 <body>
+    @auth
     <!-- ローディング画面 -->
     <div id="loading-screen">
         <div class="spinner"></div> <!-- 回転するリング -->
@@ -106,6 +107,11 @@
     <!-- スクリプト用のセクション -->
     @yield('scripts')
 
+    @endauth
+
+    @guest
+    <p>ログインしていません。ログインしてアクセスしてください。</p>
+    @endguest
 </body>
 
 </html>
