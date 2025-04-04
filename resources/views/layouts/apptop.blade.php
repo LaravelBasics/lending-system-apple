@@ -79,7 +79,9 @@
     <div id="loading-screen">
         <div class="spinner"></div> <!-- 回転するリング -->
     </div>
+    
     @yield('content')
+
     <script>
         // ページが完全に読み込まれたらローディング画面を非表示にする
         window.onload = function() {
@@ -87,6 +89,10 @@
             loadingScreen.style.display = 'none'; // ローディング画面を非表示
         };
     </script>
+
+    <!-- Vue 3 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@3.3.0/dist/vue.global.prod.js"></script>
+    @yield('script')
 </body>
 
 </html>

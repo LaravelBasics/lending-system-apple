@@ -623,7 +623,7 @@
                 <div class="modal-header">
                     <h5 class="modal-title" id="ModalLabel">
                     <strong style="font-size: 1.2rem; position: relative; top: 0.05rem; display: inline-block;">
-                        <i class="fa-solid fa-chalkboard-teacher" style="color: #ffce47;"></i> 操作の説明
+                        <i class="fa-solid fa-chalkboard-teacher" style="color: #ffce47;"></i>&ensp;操作の説明
                     </strong>   
                     </h5>
                     <form action="{{ route('logout') }}" method="POST">
@@ -636,12 +636,16 @@
                     <br>
                     「名前」&ensp;「品名（例：PC、マウス、傘など）」&ensp;「貸出日」の3つを入力して登録することができます。
                     <br>
-                    貸出日はデフォルトで今日の日付が設定されていますが、日付を変更する場合はボックスをクリックしてカレンダーから日付を選択できます。
+                    貸出日はデフォルトで今日の日付が設定されていますが、日付を変更する場合はボックスをクリックして、
                     <br>
+                    カレンダーから日付を選択できます。
+                    <br>
+                    <span style="display: block; margin-bottom: 1em;"></span>
                     <span style="color: #007BFF;">②返却機能</span>
                     <br>
                     返却する際には「即日返却」ボタンを押すことで、自動的に今日の日付が入力され、入力ミスを防げます。
                     <br>
+                    <span style="display: block; margin-bottom: 1em;"></span>
                     <span style="color: #007BFF;">③編集機能</span>
                     <br>
                     編集したいデータの横にある「編集」ボタンを押すと、データが編集モードに切り替わり、フォームが表示されます。
@@ -652,16 +656,20 @@
                     <br>
                     モーダル内にある「登録」ボタンを押すと編集内容が送信され、登録が完了します。
                     <br>
-                    エラーの際、入力内容は保持された状態で再度編集が可能です。
+                    エラーの際、送信は中断されますが、入力内容は維持され、そのまま編集が可能です。
                     <br>
-                    「キャンセル」ボタンを押すと、モーダルが閉じ、編集モードが終了します。再度編集する場合は、「編集」ボタンを押して編集モードに戻れます。
+                    モーダル内にある「キャンセル」ボタンを押すと、送信が中断されて、編集モードも終了します。
                     <br>
-                    モーダル内の「✖」ボタンや暗い画面部分をクリックするとモーダルは閉じますが、編集モードはそのまま維持されます。
+                    モーダル内にある「✖」ボタンや暗い画面部分をクリックすると、
                     <br>
+                    送信は中断されますが、編集モードはそのまま維持されます。
+                    <br>
+                    <span style="display: block; margin-bottom: 1em;"></span>
                     <span style="color: #007BFF;">④ユーザー別データ表示</span>
                     <br>
                     ログイン中のユーザーに関連するデータが降順で表示され、ページネーションはその下に配置されています。
                     <br>
+                    <span style="display: block; margin-bottom: 1em;"></span>
                     <span style="color: #007BFF;">⑤検索機能</span>
                     <br>
                     検索バーに文字を入力すると、関連するデータがデータベースから自動的に表示されます。
@@ -674,14 +682,16 @@
                     <br>
                     例：貸出日が2025年、返却日が2025年の場合、
                     <br>
-                    2025年に貸し出して2025年に返却されたデータが表示されます。
+                    「2025年に貸し出して」&ensp;「2025年に返却された」&ensp;データが表示されます。
                     <br>
+                    <span style="display: block; margin-bottom: 1em;"></span>
                     <span style="color: #007BFF;">⑥CSVダウンロード機能</span>
                     <br>
                     検索結果に基づいて、データをCSV形式でダウンロードできるボタンがあります。
                     <br>
                     ボタンを押すと、データがExcel形式で降順にダウンロードされます。
                     <br>
+                    <span style="display: block; margin-bottom: 1em;"></span>
                     <span style="color: #007BFF;">⑦データ削除機能</span>
                     <br>
                     データ量が増加した場合に備え、削除専用ページを設置しています。不要なデータを簡単に削除できます。

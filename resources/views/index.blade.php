@@ -19,17 +19,43 @@
         margin-bottom: 1rem;
     }
 
-    .image {
-        width: 150px;
-        /* 画像のサイズを固定（調整可能） */
-        height: auto;
+    /* 1段目と3段目のスライドアニメーション */
+    .slide-container {
+        width: 100%;
+        margin: auto;
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+        flex-direction: row;
     }
 
+    .slide-wrapper {
+        flex-direction: row;
+        display: flex;
+        animation: slide-flow 30s infinite linear 1s both;
+    }
+
+    .slide {
+        width: 200px;
+        margin-left: 16px;
+        object-fit: cover;
+        border: 1px solid #ddd;
+    }
+
+    @keyframes slide-flow {
+        0% {
+            transform: translateX(0);
+        }
+
+        100% {
+            transform: translateX(-200%);
+            /* 5つの画像がスライドするので、-100%では足りない */
+        }
+    }
+
+    /* 中央コンテンツ */
     .container {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
+        position: relative;
         background: white;
         padding: 1.5rem;
         border-radius: 10px;
@@ -37,63 +63,31 @@
         text-align: center;
         max-width: 300px;
     }
-
-    .image-row {
-        display: flex;
-        justify-content: space-evenly;
-        width: 100%;
-        max-width: 1200px;
-        margin-bottom: 1rem;
-    }
-
-    .image {
-        width: 150px;
-        height: auto;
-    }
-
-    .image1 {
-        flex: 1 0 30%;
-    }
-
-    .image2 {
-        flex: 1 0 30%;
-    }
-
-    .image3 {
-        flex: 1 0 30%;
-    }
-
-
-    @media (max-width: 1024px) {
-        .image {
-            width: 120px;
-        }
-    }
-
-    @media (max-width: 768px) {
-        .wrapper {
-            width: 90vw;
-        }
-
-        .image {
-            width: 100px;
-        }
-    }
 </style>
 @endsection
 
 @section('content')
 <div class="wrapper">
-    <!-- 1段目 -->
-    <div class="image-row">
-        <div class="image"><img src="{{ asset('images/image1.png') }}" alt="画像1"></div>
-        <div class="image"><img src="{{ asset('images/image2.png') }}" alt="画像2"></div>
-        <div class="image"><img src="{{ asset('images/image3.png') }}" alt="画像3"></div>
-        <div class="image"><img src="{{ asset('images/image4.png') }}" alt="画像4"></div>
-        <div class="image"><img src="{{ asset('images/image5.png') }}" alt="画像5"></div>
+    <!-- 1段目 (スライド) -->
+    <div class="slide-container">
+        <div class="slide-wrapper">
+            @for ($i = 1; $i <= 6; $i++)
+                <img class="slide" src="{{ asset("images/image{$i}.png") }}" alt="画像{{ $i }}">
+                @endfor
+        </div>
+        <div class="slide-wrapper">
+            @for ($i = 7; $i <= 12; $i++) <!-- ループのために2セット用意 -->
+                <img class="slide" src="{{ asset("images/image{$i}.png") }}" alt="画像{{ $i }}">
+                @endfor
+        </div>
+        <div class="slide-wrapper">
+            @for ($i = 1; $i <= 6; $i++) <!-- ループのために2セット用意 -->
+                <img class="slide" src="{{ asset("images/image{$i}.png") }}" alt="画像{{ $i }}">
+                @endfor
+        </div>
     </div>
 
-    <!-- 2段目（中央の画像とコンテンツ） -->
+    <!-- 2段目（中央のコンテンツ） -->
     <div class="image-row" style="margin: 3rem;">
         <div class="container">
             <h2 class="text-center mb-4">トップページ</h2>
@@ -113,13 +107,23 @@
         </div>
     </div>
 
-    <!-- 3段目 -->
-    <div class="image-row">
-        <div class="image"><img src="{{ asset('images/image6.png') }}" alt="画像6"></div>
-        <div class="image"><img src="{{ asset('images/image7.png') }}" alt="画像7"></div>
-        <div class="image"><img src="{{ asset('images/image8.png') }}" alt="画像8"></div>
-        <div class="image"><img src="{{ asset('images/image9.png') }}" alt="画像9"></div>
-        <div class="image"><img src="{{ asset('images/image10.png') }}" alt="画像10"></div>
+    <!-- 3段目 (スライド) -->
+    <div class="slide-container">
+        <div class="slide-wrapper">
+            @for ($i = 7; $i <= 12; $i++)
+                <img class="slide" src="{{ asset("images/image{$i}.png") }}" alt="画像{{ $i }}">
+                @endfor
+        </div>
+        <div class="slide-wrapper">
+            @for ($i = 1; $i <= 6; $i++) <!-- ループのために2セット用意 -->
+                <img class="slide" src="{{ asset("images/image{$i}.png") }}" alt="画像{{ $i }}">
+                @endfor
+        </div>
+        <div class="slide-wrapper">
+            @for ($i = 7; $i <= 12; $i++) <!-- ループのために2セット用意 -->
+                <img class="slide" src="{{ asset("images/image{$i}.png") }}" alt="画像{{ $i }}">
+                @endfor
+        </div>
     </div>
 </div>
 @endsection
