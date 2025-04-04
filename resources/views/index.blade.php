@@ -32,7 +32,7 @@
     .slide-wrapper {
         flex-direction: row;
         display: flex;
-        animation: slide-flow 30s infinite linear 1s both;
+        animation: slide-flow 50s infinite linear 1s both;
     }
 
     .slide {
