@@ -11,14 +11,6 @@
         width: 80vw;
     }
 
-    .image-row {
-        display: flex;
-        justify-content: space-between;
-        width: 100%;
-        max-width: 1200px;
-        margin-bottom: 1rem;
-    }
-
     /* 1段目と3段目のスライドアニメーション */
     .slide-container {
         width: 100%;
@@ -49,7 +41,7 @@
 
         100% {
             transform: translateX(-200%);
-            /* 5つの画像がスライドするので、-100%では足りない */
+            /* 6つの画像がスライドするので、-100%では足りない */
         }
     }
 
@@ -88,22 +80,33 @@
     </div>
 
     <!-- 2段目（中央のコンテンツ） -->
-    <div class="image-row" style="margin: 3rem;">
-        <div class="container">
-            <h2 class="text-center mb-4">トップページ</h2>
+    <div class="container">
+        <!-- <h2 class="text-center mb-4">トップページ</h2> -->
+        <table style="border-collapse: collapse; margin: 0 auto;">
+            <caption style="caption-side: top; text-align: center; font-weight: bold; font-size: 1.2rem;">
+                テスト用アカウント
+            </caption>
+            <tr style="text-align: center;">
+                <td style="padding: 0rem 1rem 0.25rem 0rem; text-align: left;">メールアドレス</td>
+                <td style="padding: 0rem 0rem 0.25rem 0rem; text-align: left;">test@test</td>
+            </tr>
+            <tr style="text-align: center;">
+                <td style="padding: 0rem 1rem 1rem 0rem; text-align: left;">パスワード</td>
+                <td style="padding: 0rem 0rem 1rem 0rem; text-align: left;">testtest</td>
+            </tr>
+        </table>
 
+        @auth
+        <p class="text-center">ログイン中: {{ Auth::user()->name }}</p>
+        @endauth
+
+        <div class="d-flex justify-content-center">
             @auth
-            <p class="text-center">ログイン中: {{ Auth::user()->name }}</p>
+            <a href="{{ route('lendings.index') }}" class="btn btn-primary mx-2">備品管理ページ</a>
+            @else
+            <a href="{{ route('register') }}" class="btn btn-outline-primary mx-2">ユーザー登録</a>
+            <a href="{{ route('login') }}" class="btn btn-outline-primary mx-2">ログイン</a>
             @endauth
-
-            <div class="d-flex justify-content-center">
-                @auth
-                <a href="{{ route('lendings.index') }}" class="btn btn-primary mx-2">備品管理ページ</a>
-                @else
-                <a href="{{ route('register') }}" class="btn btn-outline-primary mx-2">ユーザー登録</a>
-                <a href="{{ route('login') }}" class="btn btn-outline-primary mx-2">ログイン</a>
-                @endauth
-            </div>
         </div>
     </div>
 
