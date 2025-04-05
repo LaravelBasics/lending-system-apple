@@ -12,7 +12,7 @@
             background-color: #f8d7da;
             color: #721c24;
         }
-        h1 { font-size: 50px; }
+        h1 { font-size: 40px; }
         p { font-size: 20px; }
     </style>
 </head>

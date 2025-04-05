@@ -35,16 +35,15 @@
             <div class="text-danger">{{ $message }}</div>
             @enderror
         </div>
-
         <div class="mb-3 form-check">
             <input id="remember" class="form-check-input" name="remember" type="checkbox" />
             <label class="form-check-label" for="remember">ログイン情報を記憶する</label>
         </div>
-
         <button class="btn btn-primary w-100" type="submit">ログイン</button>
     </form>
     <div class="mt-3 d-flex justify-content-center">
         <a href="{{ route('home') }}" class="btn btn-outline-secondary mx-2">戻る</a>
     </div>
+    <small class="mt-2 d-block" style="text-align: center;"><a href="{{ route('password.request') }}">パスワードをお忘れの方</a></small>
 </div>
 @endsection

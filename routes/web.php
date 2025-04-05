@@ -10,12 +10,14 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 
 // トップページのルート
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // ダッシュボードのルート（ログインが必要）
-Route::get('/dashboard', [HomeController::class, 'dashboard'])->middleware('auth')->name('dashboard');
+// Route::get('/dashboard', [HomeController::class, 'dashboard'])->middleware('auth')->name('dashboard');
 
 // ユーザー登録のルート
 Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register')->middleware('guest');
@@ -47,6 +49,24 @@ Route::middleware(['auth'])->group(function () {
 
 // Route::get('/lendings/confirm', [LendingController::class, 'confirm'])->name('lendings.confirm');
 // Route::get('/export-csv', [CsvController::class, 'export'])->name('export.csv');
+
+
+// パスワードリセット用ルート
+Route::get('password/reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request')->middleware('guest');
+Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+Route::get('password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->middleware('signed')->name('password.reset');
+Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
+
+// use Illuminate\Support\Facades\Mail;
+
+// Route::get('test-email', function () {
+//     Mail::raw('テストメール', function ($message) {
+//         $message->to('example@domain.com')
+//                 ->subject('Test Email');
+//     });
+
+//     return 'メールが送信されました';
+// });
 
 
 use App\Models\Lending;
