@@ -54,6 +54,7 @@ class ForgotPasswordController extends Controller
             // パスワードリセット用のURLを生成
             // 生成されたトークンをURLのパラメータとして設定
             // $resetLink = url(route('password.reset', ['token' => $token]));
+            
             // 署名付きのパスワードリセットURLを生成（24時間有効）
             $resetLink = URL::temporarySignedRoute(
                 'password.reset', // ←ルート名
