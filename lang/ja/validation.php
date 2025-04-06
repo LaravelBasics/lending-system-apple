@@ -142,6 +142,24 @@ return [
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
+        'name' => [
+            'required' => 'ユーザー名は必須です。',
+            'string' => 'ユーザー名は文字列で入力してください。',
+            'max' => 'ユーザー名は:max文字以内で入力してください。',
+        ],
+        'email' => [
+            'required' => 'メールアドレスは必須です。',
+            'email' => '有効なメールアドレス形式で入力してください。',
+            'unique' => 'このメールアドレスは既に登録されています。',
+        ],
+        'password' => [
+            'required' => 'パスワードは必須です。',
+            'confirmed' => 'パスワード確認が一致しません。',
+            'min' => 'パスワードは:min文字以上で入力してください。',
+        ],
+        'password_confirmation' => [
+            'required' => 'パスワード確認は必須です。',
+        ],
     ],
 
     /*

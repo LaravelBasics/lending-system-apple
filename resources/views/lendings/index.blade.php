@@ -669,6 +669,10 @@
                     <br>
                     ログイン中のユーザーに関連するデータが降順で表示され、ページネーションはその下に配置されています。
                     <br>
+                    ユーザーがパスワードを忘れた場合は、ログイン画面からパスワード再設定メールを送信できます。
+                    <br>
+                    現在は<span style="color: #dc3545; font-weight: bold;">テスト用のため、メールは「管理者」に送信されます。</span>
+                    <br>
                     <span style="display: block; margin-bottom: 1em;"></span>
                     <span style="color: #007BFF;">⑤検索機能</span>
                     <br>
