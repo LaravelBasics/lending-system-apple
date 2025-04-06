@@ -640,12 +640,12 @@
                     <br>
                     カレンダーから日付を選択できます。
                     <br>
-                    <span style="display: block; margin-bottom: 1em;"></span>
+                    <span style="display: block; margin-bottom: 2em;"></span>
                     <span style="color: #007BFF;">②返却機能</span>
                     <br>
                     返却する際には「即日返却」ボタンを押すことで、自動的に今日の日付が入力され、入力ミスを防げます。
                     <br>
-                    <span style="display: block; margin-bottom: 1em;"></span>
+                    <span style="display: block; margin-bottom: 2em;"></span>
                     <span style="color: #007BFF;">③編集機能</span>
                     <br>
                     編集したいデータの横にある「編集」ボタンを押すと、データが編集モードに切り替わり、フォームが表示されます。
@@ -664,19 +664,19 @@
                     <br>
                     送信は中断されますが、編集モードはそのまま維持されます。
                     <br>
-                    <span style="display: block; margin-bottom: 1em;"></span>
+                    <span style="display: block; margin-bottom: 2em;"></span>
                     <span style="color: #007BFF;">④ユーザー別データ表示</span>
                     <br>
                     ログイン中のユーザーに関連するデータが降順で表示され、ページネーションはその下に配置されています。
                     <br>
                     ユーザーがパスワードを忘れた場合は、ログイン画面からパスワード再設定メールを送信できます。
                     <br>
-                    現在は<span style="color: #dc3545; font-weight: bold;">テスト用のため、メールは「管理者」に送信されます。</span>
+                    <span style="color: #dc3545; font-weight: bold;">テスト用のため、メールは「管理者」に送信されます。</span>
                     <br>
-                    <span style="display: block; margin-bottom: 1em;"></span>
+                    <span style="display: block; margin-bottom: 2em;"></span>
                     <span style="color: #007BFF;">⑤検索機能</span>
                     <br>
-                    検索バーに文字を入力すると、関連するデータがデータベースから自動的に表示されます。
+                    「名前」&ensp;「品名」&ensp;の検索バーに文字を入力すると、関連する候補が自動的に表示されます。
                     <br>
                     チェックボックスを使って未返却のデータのみを検索できます。
                     <br>
@@ -688,18 +688,18 @@
                     <br>
                     「2025年に貸し出して」&ensp;「2025年に返却された」&ensp;データが表示されます。
                     <br>
-                    <span style="display: block; margin-bottom: 1em;"></span>
+                    <span style="display: block; margin-bottom: 2em;"></span>
                     <span style="color: #007BFF;">⑥CSVダウンロード機能</span>
                     <br>
                     検索結果に基づいて、データをCSV形式でダウンロードできるボタンがあります。
                     <br>
                     ボタンを押すと、データがExcel形式で降順にダウンロードされます。
                     <br>
-                    <span style="display: block; margin-bottom: 1em;"></span>
+                    <span style="display: block; margin-bottom: 2em;"></span>
                     <span style="color: #007BFF;">⑦データ削除機能</span>
                     <br>
                     データ量が増加した場合に備え、削除専用ページを設置しています。不要なデータを簡単に削除できます。
-                    <span style="display: block; margin-bottom: 1em;"></span>
+                    <span style="display: block; margin-bottom: 3em;"></span>
                 </p>
             </div>
         </div>
