@@ -57,8 +57,8 @@ class CustomResetPassword extends ResetPasswordNotification
         //   dd($this->token);  // ここでトークンが表示されます
         $url = url(route('password.reset', [
             // パスワードリセットのURLを生成するためのルート名を指定
-            // 'token' => $this->token,  // パスワードリセットに必要なトークン（ユニークな識別子）
-            'token' => encrypt($this->token), // 暗号化してURLに渡す
+            'token' => $this->token,  // パスワードリセットに必要なトークン（ユニークな識別子）
+            // 'token' => encrypt($this->token), // 暗号化してURLに渡す
             'email' => $notifiable->getEmailForPasswordReset(),  // リセット対象のユーザーのメールアドレス
         ], false));  // 'false' は絶対URLを生成することを指定（省略時は、相対URLになることもある）
 

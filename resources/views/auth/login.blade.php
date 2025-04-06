@@ -44,6 +44,6 @@
     <div class="mt-3 d-flex justify-content-center">
         <a href="{{ route('home') }}" class="btn btn-outline-secondary mx-2">戻る</a>
     </div>
-    <!-- <small class="mt-2 d-block" style="text-align: center;"><a href="{{ route('password.request') }}">パスワードをお忘れの方</a></small> -->
+    <small class="mt-2 d-block" style="text-align: center;"><a href="{{ route('password.request') }}">パスワードをお忘れの方</a></small>
 </div>
 @endsection
