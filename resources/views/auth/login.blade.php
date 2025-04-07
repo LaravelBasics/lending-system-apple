@@ -22,7 +22,7 @@
         @csrf
         <div class="mb-3">
             <label class="form-label" for="email">メールアドレス</label>
-            <input id="email" class="form-control" name="email" type="email" value="{{ old('email') }}" autofocus />
+            <input id="email" class="form-control" name="email" type="email" value="{{ old('email') }}" required autofocus />
             @error('email')
             <div class="text-danger">{{ $message }}</div>
             @enderror
@@ -30,7 +30,7 @@
 
         <div class="mb-3">
             <label class="form-label" for="password">パスワード</label>
-            <input id="password" class="form-control" name="password" type="password" />
+            <input id="password" class="form-control" name="password" type="password" required />
             @error('password')
             <div class="text-danger">{{ $message }}</div>
             @enderror

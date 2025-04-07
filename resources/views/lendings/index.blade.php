@@ -302,7 +302,7 @@
 <div>
     <div class="flex-container">
         <div class="elementright">
-            <a href="{{ route('export.csv') }}"><button type="button">CSVをダウンロード</button></a>
+            <a href="{{ route('export.csv') }}"><button type="button">CSVダウンロード</button></a>
         </div>
         <div>
             <h1 class="title">
@@ -576,7 +576,7 @@
                 <div class="modal-header">
                     <h5 class="modal-title" id="showEditLabel">
                         <span style="color: #e74c3c">
-                            今日の日付で返却しますか？
+                            今日の日付で登録しますか？
                         </span>
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -608,7 +608,7 @@
                         <input type="hidden" name="item_name_update" :value="editLendingUpdate.item_name_update">
                         <input type="hidden" name="lend_date_update" :value="editLendingUpdate.lend_date_update">
                         <input type="hidden" name="return_date_update" :value="today">
-                        <button type="submit" class="btn btn-danger">返却</button>
+                        <button type="submit" class="btn btn-success">登録</button>
                     </form>
                 </div>
             </div>

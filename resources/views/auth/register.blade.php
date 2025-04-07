@@ -23,7 +23,7 @@
             @error('name')
             <div class="text-danger">{{ $message }}</div>
             @enderror
-            <input id="name" type="text" name="name" class="form-control" value="{{ old('name') }}" autofocus>
+            <input id="name" type="text" name="name" class="form-control" value="{{ old('name') }}" required autofocus>
         </div>
 
         <div class="mb-3">
@@ -31,7 +31,7 @@
             @error('email')
             <div class="text-danger">{{ $message }}</div>
             @enderror
-            <input id="email" type="email" name="email" class="form-control" value="{{ old('email') }}">
+            <input id="email" type="email" name="email" class="form-control" value="{{ old('email') }}" required>
         </div>
 
         <div class="mb-3">
@@ -39,7 +39,7 @@
             @error('password')
             <div class="text-danger">{{ $message }}</div>
             @enderror
-            <input id="password" type="password" name="password" class="form-control">
+            <input id="password" type="password" name="password" class="form-control" required>
         </div>
 
         <div class="mb-3">
@@ -47,7 +47,7 @@
             @error('password_confirmation')
             <div class="text-danger">{{ $message }}</div>
             @enderror
-            <input id="password-confirm" type="password" name="password_confirmation" class="form-control">
+            <input id="password-confirm" type="password" name="password_confirmation" class="form-control" required>
         </div>
 
         <button type="submit" class="btn btn-primary w-100">登録</button>
