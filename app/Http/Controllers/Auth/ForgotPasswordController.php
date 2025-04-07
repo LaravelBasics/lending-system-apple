@@ -45,7 +45,7 @@ class ForgotPasswordController extends Controller
             // すでに存在するリセットトークンを削除
             DB::table('password_reset_tokens')->where('email', $user->email)->delete();
 
-            // 暗号化したトークンと共に、メールアドレスと作成日時をデータベースに保存
+            // トークンと共に、メールアドレスと作成日時をデータベースに保存
             DB::table('password_reset_tokens')->insert([
                 'email' => $user->email,
                 'token' => $token,
