@@ -113,17 +113,17 @@
     <!-- 3段目 (スライド) -->
     <div class="slide-container">
         <div class="slide-wrapper">
-            @for ($i = 7; $i <= 12; $i++)
+            @for ($i = 13; $i <= 18; $i++)
                 <img class="slide" src="{{ asset("images/image{$i}.png") }}" alt="画像{{ $i }}">
                 @endfor
         </div>
         <div class="slide-wrapper">
-            @for ($i = 1; $i <= 6; $i++) <!-- ループのために2セット用意 -->
+            @for ($i = 19; $i <= 24; $i++) <!-- ループのために2セット用意 -->
                 <img class="slide" src="{{ asset("images/image{$i}.png") }}" alt="画像{{ $i }}">
                 @endfor
         </div>
         <div class="slide-wrapper">
-            @for ($i = 7; $i <= 12; $i++) <!-- ループのために2セット用意 -->
+            @for ($i = 13; $i <= 18; $i++) <!-- ループのために2セット用意 -->
                 <img class="slide" src="{{ asset("images/image{$i}.png") }}" alt="画像{{ $i }}">
                 @endfor
         </div>
