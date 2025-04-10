@@ -6,41 +6,64 @@
 <style>
     .wrapper {
         display: flex;
+        /* フレックスボックスで配置 */
         flex-direction: column;
+        /* 子要素を縦に並べる */
         align-items: center;
+        /* 子要素を左右中央に揃える */
         width: 80vw;
+        /* ブラウザ幅の80%（レスポンシブ対応） */
     }
 
     /* 1段目と3段目のスライドアニメーション */
     .slide-container {
         width: 100%;
+        /* 親要素いっぱいに広げる */
         margin: auto;
+        /* 中央寄せ（横） */
         display: flex;
+        /* 子要素を横並びにする */
         align-items: center;
+        /* 高さ方向の中央揃え */
         overflow: hidden;
+        /* スライドがはみ出た部分は非表示 */
         flex-direction: row;
+        /* 横方向に子要素を並べる */
     }
 
     .slide-wrapper {
         flex-direction: row;
+        /* 横並び */
         display: flex;
         animation: slide-flow 50s infinite linear 1s both;
+        /* アニメーション名：slide-flow
+       再生時間：50秒
+       無限ループ：infinite
+       速度一定：linear
+       1秒遅延：1s
+       開始・終了時のスタイル保持：both */
     }
 
     .slide {
         width: 200px;
+        /* 画像の横幅 */
         margin-left: 16px;
+        /* 左に少し余白を設ける */
         object-fit: cover;
+        /* アスペクト比を保ちつつ枠に合わせる */
         border: 1px solid #ddd;
+        /* 薄いグレーの枠線 */
     }
 
     @keyframes slide-flow {
         0% {
             transform: translateX(0);
+            /* 初期位置：そのまま */
         }
 
         100% {
             transform: translateX(-200%);
+            /* 左に200%移動（2セット分） */
             /* 6つの画像がスライドするので、-100%では足りない */
         }
     }
@@ -48,12 +71,19 @@
     /* 中央コンテンツ */
     .container {
         position: relative;
+        /* 子要素の絶対位置指定が可能に */
         background: white;
+        /* 背景は白 */
         padding: 1.5rem;
+        /* 内側の余白 */
         border-radius: 10px;
+        /* 角丸で柔らかい印象に */
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        /* ふわっとした影を付ける */
         text-align: center;
+        /* テキストを中央揃え */
         max-width: 300px;
+        /* 最大幅300px（スマホでも整う） */
     }
 </style>
 @endsection

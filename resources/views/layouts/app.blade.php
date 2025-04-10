@@ -82,7 +82,7 @@
     </div>
     <div id="app" v-cloak>
         <div v-if="isMobile" class="error-container">
-            <h1>スマホ版は対応していません</h1>
+            <h1>現在の画面サイズでは表示できません</h1>
             <!-- 画面中央に表示する画像 -->
             <img src="{{ asset("images/image0.png") }}" alt="画像0"
             class="position-fixed bottom-0 end-0 m-3" 
