@@ -17,12 +17,12 @@
             "dest": "/public/build/$1"
         },
         {
-            "src": "/(.*)",
-            "dest": "/api/index.php"
-        },
-        {
             "src": "/favicon.png",
             "dest": "/public/favicon.png" 
+        },
+        {
+            "src": "/(.*)",
+            "dest": "/api/index.php"
         }
     ],
     "env": {
