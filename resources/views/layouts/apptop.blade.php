@@ -32,9 +32,9 @@
             /* トップ部分の色 */
             border-radius: 50%;
             /* 円形にする */
-            width: 3.125rem;
+            width: 10rem;
             /* リングのサイズ */
-            height: 3.125rem;
+            height: 10rem;
             animation: spin 1s linear infinite;
             /* アニメーションの設定 */
         }
